@@ -1,4 +1,6 @@
-// INFECTED.EXE v0.1
+// ✅ INFECTED.EXE v0.2 — Graphics Upgrade
+console.log("🧠 INFECTED.EXE game.js loaded.");
+
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -9,6 +11,12 @@ const GRID_HEIGHT = canvas.height / TILE_SIZE;
 let dedkodeImg = new Image();
 dedkodeImg.src = "dedkode.png";
 
+let userImg = new Image();
+userImg.src = "user.png";
+
+let zombieImg = new Image();
+zombieImg.src = "zombie.png";
+
 let player = { x: 1, y: 1, health: 3 };
 let users = [];
 let zombies = [];
@@ -16,18 +24,15 @@ let rescued = 0;
 const maxUsers = 5;
 const maxZombies = 3;
 
-function drawTile(x, y, color) {
-  ctx.fillStyle = color;
-  ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-}
-
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Draw users
-  users.forEach(u => drawTile(u.x, u.y, "cyan"));
+  users.forEach(u => ctx.drawImage(userImg, u.x * TILE_SIZE, u.y * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+
   // Draw zombies
-  zombies.forEach(z => drawTile(z.x, z.y, "red"));
+  zombies.forEach(z => ctx.drawImage(zombieImg, z.x * TILE_SIZE, z.y * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+
   // Draw player
   ctx.drawImage(dedkodeImg, player.x * TILE_SIZE, player.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 
@@ -79,9 +84,7 @@ function checkCollisions() {
   });
 
   // Zombies infect users
-  users = users.filter(u => {
-    return !zombies.some(z => z.x === u.x && z.y === u.y);
-  });
+  users = users.filter(u => !zombies.some(z => z.x === u.x && z.y === u.y));
 }
 
 function gameLoop() {
@@ -112,7 +115,6 @@ window.addEventListener("keydown", e => {
   draw();
 });
 
-// Init
 spawnEntities();
 dedkodeImg.onload = () => {
   draw();
